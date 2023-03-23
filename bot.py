@@ -40,6 +40,8 @@ async def custom_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text="Please set a custom behavior first.")
 
+async def message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="Please use one of the available commands.")
 
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="This command does not exist.")
@@ -51,10 +53,12 @@ if __name__ == '__main__':
     question_handler = CommandHandler('q', question)
     set_custom_behavior_handler = CommandHandler('p', set_custom_behavior)
     custom_prompt_handler = CommandHandler('c', custom_prompt)
+    message_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), message)
     unknown_handler = MessageHandler(filters.COMMAND, unknown)
 
     application.add_handler(question_handler)
     application.add_handler(set_custom_behavior_handler)
     application.add_handler(custom_prompt_handler)
+    application.add_handler(message_handler)
     application.add_handler(unknown_handler)
     application.run_polling()
