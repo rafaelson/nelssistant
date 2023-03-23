@@ -26,6 +26,15 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def set_custom_behavior(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.chat_data['custom_behavior'] = " ".join(context.args)
 
+async def print_current_custom_behavior(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    custom_behavior = context.chat_data.get('custom_behavior')
+
+    if custom_behavior:
+        await context.bot.sendMessage(chat_id=update.effective_chat.id, text=f"The current custom behavior is '{custom_behavior}'")
+    else:
+        await context.bot.sendMessage(chat_id=update.effective_chat.id, text="You haven't set a custom behavior yet.")
+
+
 async def custom_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     custom_behavior = context.chat_data.get('custom_behavior')
 
@@ -51,13 +60,15 @@ if __name__ == '__main__':
     application = ApplicationBuilder().token(os.getenv("BOT_TOKEN")).persistence(chat_persistence).build()
 
     question_handler = CommandHandler('q', question)
-    set_custom_behavior_handler = CommandHandler('p', set_custom_behavior)
+    set_custom_behavior_handler = CommandHandler('bh', set_custom_behavior)
+    print_current_custom_behavior_handler = CommandHandler('cbh', print_current_custom_behavior)
     custom_prompt_handler = CommandHandler('c', custom_prompt)
     message_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), message)
     unknown_handler = MessageHandler(filters.COMMAND, unknown)
 
     application.add_handler(question_handler)
     application.add_handler(set_custom_behavior_handler)
+    application.add_handler(print_current_custom_behavior_handler)
     application.add_handler(custom_prompt_handler)
     application.add_handler(message_handler)
     application.add_handler(unknown_handler)
