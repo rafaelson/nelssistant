@@ -9,10 +9,10 @@ Nelssistant is a telegram bot that acts as a general assistant based on OpenAI's
 
 ## Commands
 
-- /q - Ask Nelssistant a question
-- /bh - Set a custom behavior for Nelssistant
+- /q [question] - Ask Nelssistant a question
+- /bh [behavior] - Set a custom behavior for Nelssistant
+- /c [prompt] - Make a prompt using the current custom behavior
 - /cbh - Show current custom behavior
-- /c - Make a prompt using the current custom behavior
 
 ## Try it
 
