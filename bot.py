@@ -16,6 +16,17 @@ def check_content(content):
     response = openai.Moderation.create(input=content)
     return response['results'][0]['flagged']
         
+def prompt(system, user):
+    answer = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[
+    {"role": "system", "content": system},
+    {"role": "user", "content": user}
+    ])
+    
+    if check_content(answer['choices'][0]['message']['content']):
+        return "The answer to your prompt was flagged as inappropriate, you could try rephrasing your prompt and trying again"
+    else:
+        return answer['choices'][0]['message']['content']
+
 
 async def question(update: Update, context: ContextTypes.DEFAULT_TYPE):
     question = " ".join(context.args)
@@ -23,11 +34,8 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if check_content(question):
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text="Your question was flagged as inappropriate.") 
     else:
-        answer = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[
-            {"role": "system", "content": "You are a friendly robotic assistant named Nelssistant"},
-            {"role": "user", "content": question}
-        ])
-        await context.bot.sendMessage(chat_id=update.effective_chat.id, text=answer['choices'][0]['message']['content'])
+        answer = prompt("You are a friendly robotic assistant named Nelssistant", question)
+        await context.bot.sendMessage(chat_id=update.effective_chat.id, text=answer)
 
 
 async def set_custom_behavior(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -57,11 +65,8 @@ async def custom_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if check_content(question):
             await context.bot.sendMessage(chat_id=update.effective_chat.id, text="Your prompt was flagged as inappropriate.")
         else:
-            answer = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[
-            {"role": "system", "content": custom_behavior},
-            {"role": "user", "content": question}
-            ])
-            await context.bot.sendMessage(chat_id=update.effective_chat.id, text=answer['choices'][0]['message']['content'])
+            answer = prompt(custom_behavior, question)
+            await context.bot.sendMessage(chat_id=update.effective_chat.id, text=answer)
     else:
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text="Please set a custom behavior first.")
 
