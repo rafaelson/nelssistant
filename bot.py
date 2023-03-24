@@ -25,7 +25,7 @@ def prompt(system, user):
     ])
 
     if check_content(answer['choices'][0]['message']['content']):
-        return "The answer to your prompt was flagged as inappropriate, you could try rephrasing your prompt and trying again"
+        return "The answer to your prompt was flagged as inappropriate, you could try rephrasing your prompt and trying again."
     else:
         return answer['choices'][0]['message']['content']
 
@@ -53,7 +53,7 @@ async def print_current_custom_behavior(update: Update, context: ContextTypes.DE
     custom_behavior = context.user_data.get('custom_behavior')
 
     if custom_behavior:
-        await context.bot.sendMessage(chat_id=update.effective_chat.id, text=f"The current custom behavior is '{custom_behavior}'")
+        await context.bot.sendMessage(chat_id=update.effective_chat.id, text=f"The current custom behavior is '{custom_behavior}'.")
     else:
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text="You haven't set a custom behavior yet.")
 
