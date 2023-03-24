@@ -12,16 +12,18 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+
 def check_content(content):
     response = openai.Moderation.create(input=content)
     return response['results'][0]['flagged']
         
+
 def prompt(system, user):
     answer = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[
     {"role": "system", "content": system},
     {"role": "user", "content": user}
     ])
-    
+
     if check_content(answer['choices'][0]['message']['content']):
         return "The answer to your prompt was flagged as inappropriate, you could try rephrasing your prompt and trying again"
     else:
@@ -70,11 +72,14 @@ async def custom_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text="Please set a custom behavior first.")
 
+
 async def message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Please use one of the available commands.")
 
+
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="This command does not exist.")
+
 
 if __name__ == '__main__':
     chat_persistence = PicklePersistence(filepath="nelssistant_data")
