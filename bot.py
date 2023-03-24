@@ -46,11 +46,11 @@ async def set_custom_behavior(update: Update, context: ContextTypes.DEFAULT_TYPE
     if check_content(custom_behavior):
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text="Your chosen behavior was flagged as inappropriate.")
     else:
-        context.chat_data['custom_behavior'] = custom_behavior
+        context.user_data['custom_behavior'] = custom_behavior
 
 
 async def print_current_custom_behavior(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    custom_behavior = context.chat_data.get('custom_behavior')
+    custom_behavior = context.user_data.get('custom_behavior')
 
     if custom_behavior:
         await context.bot.sendMessage(chat_id=update.effective_chat.id, text=f"The current custom behavior is '{custom_behavior}'")
@@ -59,7 +59,7 @@ async def print_current_custom_behavior(update: Update, context: ContextTypes.DE
 
 
 async def custom_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    custom_behavior = context.chat_data.get('custom_behavior')
+    custom_behavior = context.user_data.get('custom_behavior')
 
     if custom_behavior:
         question = " ".join(context.args)
